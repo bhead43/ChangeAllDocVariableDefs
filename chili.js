@@ -131,3 +131,33 @@ export async function documentGetVariableValues(id, apikey, url) {
     }
     return result;
 }
+
+// Get variable definitions
+export async function documentGetVariableDefinitions(id, apikey, url) {
+    let result = {
+        response: "",
+        isOK: false,
+        error: ""
+    };
+    try {
+        const response = await fetch(
+            url + `/resources/documents/${id}/variabledefinitions`, {
+            method: "GET",
+            headers: {
+                "api-key": apikey
+            }
+        });
+        if (!response.ok) {
+            result.isOK = false;
+            result.error = Error(`DocumentGetVariableDefinitions failed with message: ${response.status} ${response.statusText}, ${await response.text()}`);
+        } else {
+            const responseJSON = jsonifyChiliResponse(await response.text());
+            result.isOK = true;
+            result.response = responseJSON;
+        }
+    } catch (err) {
+        result.isOK = false;
+        result.error = err;
+    }
+    return result;
+}

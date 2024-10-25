@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { generateAPIKey, resourceGetTreeLevel, documentGetVariableValues, documentSetVariableDefinitions } from "./chili.js";
+import { generateAPIKey, resourceGetTreeLevel, documentGetVariableValues, documentSetVariableDefinitions, documentGetVariableDefinitions } from "./chili.js";
 import { buildBaseURL, getResourceInfo } from "./utils.js";
 
 const config = JSON.parse(fs.readFileSync('config.json', 'utf-8'));
@@ -30,7 +30,7 @@ const docs = await getResourceInfo(initialTree, 'documents', [], apikey, baseurl
 // Check each document in list
 for (let i = 0; i < docs.length; i++) {
     // Check variables values to see if variable to swap exists
-    const varValuesFetch = await documentGetVariableValues(docs[i].id, apikey, baseurl);
+    const varValuesFetch = await documentGetVariableDefinitions(docs[i].id, apikey, baseurl);
     const varValues = varValuesFetch.isOK ? varValuesFetch.response : "FAILED";
     if (varValues == "FAILED") {
         throw new Error(varValuesFetch.error);
@@ -40,12 +40,12 @@ for (let i = 0; i < docs.length; i++) {
     if(varValues.item != null) {
         if(varValues.item.length != null){
             varValues.item.forEach(v => {
-                if(v.name == config.targetVariable) {
+                if(v.name == config.targetVariable && (v.displayFilter ?? null) == config.targetFilter) {
                     containsVar = true;
                 }
             });
         } else {
-            if(varValues.item.name == config.targetVariable) {
+            if(varValues.item.name == config.targetVariable && (varValues.item.displayFilter ?? null) == config.targetFilter) {
                 containsVar = true;
             }
         }

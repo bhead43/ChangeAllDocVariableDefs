@@ -1,11 +1,12 @@
 {
-    "environment": "cp-lnl-121",
+    "environment": "",
     "isSandbox": false,
     "auth": {
         "user": "",
         "pass": "",
         "apikey": ""
     },
-    "targetDirectory": "00 CHILI Support/test",
-    "targetVariable" : "Printed by"
+    "targetDirectory": "",
+    "targetVariable" : "",
+    "targetFilter": ""
 }
